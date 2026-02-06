@@ -1,2 +1,4 @@
 const zSignUp = require("./signup.js");
-module.exports = { zSignUp };
+const zLogin = require("./login.js");
+
+module.exports = { zSignUp, zLogin };

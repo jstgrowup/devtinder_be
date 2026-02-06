@@ -2,16 +2,20 @@ const express = require("express");
 const { z } = require("zod");
 const connectDB = require("./config/database");
 const UserModel = require("./models/User");
+const bcrypt = require("bcrypt");
 const app = express();
-const { zSignUp } = require("./zod/index.js");
+const { zSignUp, zLogin } = require("./zod/index.js");
 // This has taken the json and converted it to JS object and added this into the req body
 app.use(express.json());
 app.post("/sign-up", async (req, res) => {
   try {
     const body = req.body;
+    // Data Validations
     const validatedData = zSignUp.parse(body);
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    console.log("hashedPassword:", hashedPassword);
     // New instance of the user model
-    const user = new UserModel(validatedData);
+    const user = new UserModel({ ...validatedData, password: hashedPassword });
     await user.save();
     res.send("User created successfully");
   } catch (error) {
@@ -28,7 +32,32 @@ app.post("/sign-up", async (req, res) => {
     }
   }
 });
+app.post("/login", async (req, res) => {
+  try {
+    const body = req.body;
+    // Data Validations
+    const validatedData = zLogin.parse(body);
 
+    const hashedPassword = await bcrypt.compare("", validatedData.password);
+    console.log("hashedPassword:", hashedPassword);
+    // New instance of the user model
+    const user = new UserModel({ ...validatedData, password: hashedPassword });
+    await user.save();
+    res.send("User created successfully");
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errors = error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      }));
+      res.status(400).send(errors[0].message);
+    } else {
+      res
+        .status(400)
+        .send("Something went wrong while creating the user" + error.message);
+    }
+  }
+});
 app.get("/feed", async (req, res) => {
   try {
     // New instance of the user model
