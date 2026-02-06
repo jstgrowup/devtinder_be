@@ -43,6 +43,7 @@ app.patch("/user", async (req, res) => {
     // It ignores the userId
     const user = await UserModel.findByIdAndUpdate(userId, data, {
       returnDocument: "after",
+      runValidators: true,
     });
     res.send(user);
   } catch (error) {
