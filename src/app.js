@@ -1,7 +1,7 @@
 const express = require("express");
 const { z } = require("zod");
 const connectDB = require("./config/database");
-const UserModel = require("./models/User");
+const User = require("../src/models/User.js");
 const bcrypt = require("bcrypt");
 const app = express();
 const { zSignUp, zLogin } = require("./zod/index.js");
@@ -15,7 +15,7 @@ app.post("/sign-up", async (req, res) => {
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
     console.log("hashedPassword:", hashedPassword);
     // New instance of the user model
-    const user = new UserModel({ ...validatedData, password: hashedPassword });
+    const user = new User({ ...validatedData, password: hashedPassword });
     await user.save();
     res.send("User created successfully");
   } catch (error) {
@@ -37,13 +37,23 @@ app.post("/login", async (req, res) => {
     const body = req.body;
     // Data Validations
     const validatedData = zLogin.parse(body);
+    const foundUser = await User.findOne({
+      emailId: validatedData.emailId,
+    });
 
-    const hashedPassword = await bcrypt.compare("", validatedData.password);
-    console.log("hashedPassword:", hashedPassword);
-    // New instance of the user model
-    const user = new UserModel({ ...validatedData, password: hashedPassword });
-    await user.save();
-    res.send("User created successfully");
+    if (!foundUser) {
+      res.status(401).send("Invalid credentials");
+    }
+
+    const validatedPassword = await bcrypt.compare(
+      validatedData.password,
+      foundUser.password,
+    );
+    if (validatedPassword) {
+      res.send("Login Successfull");
+    } else {
+      res.status(400).send("Invalid credentials");
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors = error.issues.map((issue) => ({
@@ -61,7 +71,7 @@ app.post("/login", async (req, res) => {
 app.get("/feed", async (req, res) => {
   try {
     // New instance of the user model
-    const users = await UserModel.find({});
+    const users = await User.find({});
     res.send(users);
   } catch (error) {
     console.log("error:", error);
@@ -72,7 +82,7 @@ app.delete("/user", async (req, res) => {
   const userId = req.body.userId;
   try {
     // New instance of the user model
-    await UserModel.findByIdAndDelete(userId);
+    await User.findByIdAndDelete(userId);
     res.send("User deleted successfully");
   } catch (error) {
     res.status(400).send("Something went wrong while deleting the user");
@@ -84,7 +94,7 @@ app.patch("/user", async (req, res) => {
   try {
     // New instance of the user model
     // It ignores the userId
-    const user = await UserModel.findByIdAndUpdate(userId, data, {
+    const user = await User.findByIdAndUpdate(userId, data, {
       returnDocument: "after",
       runValidators: true,
     });
