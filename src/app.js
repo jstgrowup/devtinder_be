@@ -1,18 +1,31 @@
 const express = require("express");
+const { z } = require("zod");
 const connectDB = require("./config/database");
 const UserModel = require("./models/User");
 const app = express();
+const { zSignUp } = require("./zod/index.js");
 // This has taken the json and converted it to JS object and added this into the req body
 app.use(express.json());
 app.post("/sign-up", async (req, res) => {
   try {
     const body = req.body;
+    const validatedData = zSignUp.parse(body);
     // New instance of the user model
-    const user = new UserModel(body);
+    const user = new UserModel(validatedData);
     await user.save();
     res.send("User created successfully");
   } catch (error) {
-    res.status(400).send("Something went wrong while creating the user");
+    if (error instanceof z.ZodError) {
+      const errors = error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      }));
+      res.status(400).send(errors[0].message);
+    } else {
+      res
+        .status(400)
+        .send("Something went wrong while creating the user" + error.message);
+    }
   }
 });
 
@@ -22,6 +35,7 @@ app.get("/feed", async (req, res) => {
     const users = await UserModel.find({});
     res.send(users);
   } catch (error) {
+    console.log("error:", error);
     res.status(400).send("Something went wrong while creating the user");
   }
 });

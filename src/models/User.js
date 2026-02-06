@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const userSchema = mongoose.Schema(
   {
-    firstName: { type: String, required: true, minLength: 4, maxLength: 40 },
+    firstName: {
+      type: String,
+      required: true,
+      minLength: 4,
+      maxLength: 40,
+      trim: true,
+    },
     lastName: { type: String },
     emailId: {
       type: String,
@@ -26,7 +33,7 @@ const userSchema = mongoose.Schema(
       default:
         "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png",
     },
-    skills: { type: [String] },
+    skills: { type: [String], validate: (v) => v.length <= 10 },
   },
   { timestamps: true },
 );
