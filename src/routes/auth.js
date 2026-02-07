@@ -5,7 +5,7 @@ const User = require("../models/User.js");
 const bcrypt = require("bcrypt");
 const { fromError } = require("zod-validation-error");
 const { zSignUp, zLogin } = require("../zod");
-router.post("/sign-up", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const body = req.body;
     // Data Validations
@@ -41,7 +41,7 @@ router.post("/login", async (req, res) => {
 
     if (validatedPassword) {
       // Create a token
-      const token = foundUser.getJwt();
+      const token = await foundUser.getJwt();
       // Add the token to cookie and send the response back to the user
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
@@ -64,5 +64,10 @@ router.post("/login", async (req, res) => {
         .send("Something went wrong while creating the user" + error.message);
     }
   }
+});
+router.post("/logout", async (req, res) => {
+  res
+    .cookie("token", null, { expires: new Date(Date.now()) })
+    .send("Logged out successfully");
 });
 module.exports = router;
