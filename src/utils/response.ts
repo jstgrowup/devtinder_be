@@ -1,4 +1,4 @@
-const ErrorResponse = (res, statusCode, params) => {
+export const ErrorResponse = (res, statusCode, params) => {
   return res.status(statusCode).json({
     success: false,
     message: params.message,
@@ -6,4 +6,3 @@ const ErrorResponse = (res, statusCode, params) => {
     errors: params?.errors ?? {},
   });
 };
-module.exports = { ErrorResponse };

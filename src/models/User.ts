@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const userSchema = mongoose.Schema(
+import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -34,18 +34,20 @@ const userSchema = mongoose.Schema(
       default:
         "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png",
     },
-    skills: { type: [String], validate: (v) => v.length <= 10 },
+    skills: { type: [String], validate: (v: string) => v.length <= 10 },
   },
   { timestamps: true },
 );
+
+userSchema.index({ firstName: 1, lastName: 1 });
 userSchema.methods.getJwt = async function () {
   const user = this;
   return await jwt.sign({ _id: user._id }, "DEV@TINDER", {
     expiresIn: "1d",
   });
 };
-userSchema.methods.validatePass = async function (inputPass) {
+userSchema.methods.validatePass = async function (inputPass: string) {
   const passwordHash = this.password;
   return await bcrypt.compare(inputPass, passwordHash);
 };
-module.exports = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);

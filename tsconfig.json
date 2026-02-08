@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "importsNotUsedAsValues": "remove",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types", "./@types"],
+    "paths": {
+      "@/*": ["./lib/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

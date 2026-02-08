@@ -1,11 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const { z } = require("zod");
-const User = require("../models/User.js");
-const bcrypt = require("bcrypt");
-const { fromError } = require("zod-validation-error");
-const { zSignUp, zLogin } = require("../zod");
-router.post("/signup", async (req, res) => {
+import { Router, Request, Response } from "express";
+import bcrypt from "bcrypt";
+import { fromError } from "zod-validation-error";
+const router = Router();
+import { User } from "../models/User.js";
+import { zLogin, zSignUp } from "../zod/auth.js";
+
+router.post("/signup", async (req: Request, res: Response) => {
   try {
     const body = req.body;
     // Data Validations
@@ -24,7 +24,7 @@ router.post("/signup", async (req, res) => {
     }
   }
 });
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: Request, res: Response) => {
   try {
     const body = req.body;
     // Data Validations
@@ -52,22 +52,17 @@ router.post("/login", async (req, res) => {
       res.status(400).send("Invalid credentials");
     }
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errors = error.issues.map((issue) => ({
-        path: issue.path.join("."),
-        message: issue.message,
-      }));
-      res.status(400).send(errors[0].message);
+    const validationError = fromError(error).toString();
+    if (validationError) {
+      res.status(400).send(validationError);
     } else {
-      res
-        .status(400)
-        .send("Something went wrong while creating the user" + error.message);
+      res.status(400).send("Something went wrong while creating the user");
     }
   }
 });
-router.post("/logout", async (req, res) => {
+router.post("/logout", async (req: Request, res: Response) => {
   res
     .cookie("token", null, { expires: new Date(Date.now()) })
     .send("Logged out successfully");
 });
-module.exports = router;
+export default router;
