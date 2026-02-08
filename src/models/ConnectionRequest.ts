@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { REQUEST_STATUS } from "../utils/enums";
 const connectionRequestSchema = new mongoose.Schema(
   {
     fromUserId: {
@@ -13,7 +14,7 @@ const connectionRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: {
-        values: ["ignore", "interested", "accepted", "rejected"],
+        values: Object.values(REQUEST_STATUS),
         message: "{VALUE} is not a valid status",
       },
     },

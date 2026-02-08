@@ -2,10 +2,11 @@ import { Response, Router } from "express";
 import { AuthenticatedRequest } from "../types";
 const router = Router();
 import { fromError } from "zod-validation-error";
-import { zConnectionRequest } from "../zod/connection";
+import { zAcceptReject, zConnectionRequest } from "../zod/connection";
 import { User } from "../models/User";
 import { ConnectionRequest } from "../models/ConnectionRequest";
 import { authMiddleware } from "../middlewares/auth";
+import { REQUEST_STATUS } from "../utils/enums";
 router.post(
   "/send/interested/:status/:toUserId",
   authMiddleware,
@@ -36,6 +37,38 @@ router.post(
       });
       await connectionRequest.save();
       return res.send("Connection Request sent successfully");
+    } catch (error) {
+      const validationError = fromError(error).toString();
+      if (validationError) {
+        res.status(400).send(validationError.toString());
+      } else {
+        res.status(400).send("Something went wrong while creating the user");
+      }
+    }
+  },
+);
+router.post(
+  "/review/:status/:requestId",
+  authMiddleware,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user._id;
+      const status = req.params.status;
+      const requestId = req.params.requestId;
+      const validatedBody = zAcceptReject.parse({ status });
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: userId,
+        status: REQUEST_STATUS.INTERESTED,
+      });
+      if (!connectionRequest) {
+        return res.status(400).send("Sorry invalid request id");
+      }
+      connectionRequest.status = validatedBody.status;
+      await connectionRequest.save();
+      return res.send(
+        `Connection Request ${validatedBody.status} successfully`,
+      );
     } catch (error) {
       const validationError = fromError(error).toString();
       if (validationError) {
