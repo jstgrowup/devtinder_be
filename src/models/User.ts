@@ -1,7 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const userSchema = new mongoose.Schema(
+import { IUser } from "../types";
+interface IUserMethods {
+  getJwt(): Promise<string>;
+  validatePass(inputPass: string): Promise<boolean>;
+}
+
+export type UserModel = Model<IUser, {}, IUserMethods>;
+const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
   {
     firstName: {
       type: String,
@@ -48,6 +55,7 @@ userSchema.methods.getJwt = async function () {
 };
 userSchema.methods.validatePass = async function (inputPass: string) {
   const passwordHash = this.password;
+
   return await bcrypt.compare(inputPass, passwordHash);
 };
 export const User = mongoose.model("User", userSchema);

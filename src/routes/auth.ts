@@ -34,10 +34,14 @@ router.post("/login", async (req: Request, res: Response) => {
     });
 
     if (!foundUser) {
-      res.status(401).send("Invalid credentials");
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials", success: false });
     }
 
-    const validatedPassword = foundUser.validatePass(validatedData.password);
+    const validatedPassword = await foundUser.validatePass(
+      validatedData.password,
+    );
 
     if (validatedPassword) {
       // Create a token
@@ -47,22 +51,31 @@ router.post("/login", async (req: Request, res: Response) => {
         expires: new Date(Date.now() + 8 * 3600000),
       });
 
-      res.send("Login Successfull");
+      return res.json({
+        message: "Login Successfull",
+        data: foundUser,
+        success: true,
+      });
     } else {
-      res.status(400).send("Invalid credentials");
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials", success: false });
     }
   } catch (error) {
     const validationError = fromError(error).toString();
     if (validationError) {
-      res.status(400).send(validationError);
+      res.status(400).json({ message: validationError, success: false });
     } else {
-      res.status(400).send("Something went wrong while creating the user");
+      res.status(400).json({
+        message: "Something went wrong while creating the user",
+        success: true,
+      });
     }
   }
 });
 router.post("/logout", async (req: Request, res: Response) => {
   res
     .cookie("token", null, { expires: new Date(Date.now()) })
-    .send("Logged out successfully");
+    .json({ message: "Logged out successfully" });
 });
 export default router;

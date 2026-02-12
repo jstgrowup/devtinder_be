@@ -6,14 +6,17 @@ const router = Router();
 import { fromError } from "zod-validation-error";
 import { authMiddleware } from "../middlewares/auth.js";
 router.get(
-  "/view",
+  "/me",
   authMiddleware,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const user = req.user;
-      res.send(user);
+      console.log("user:", user);
+      res.send({ data: user });
     } catch (error) {
-      res.status(400).send("Something went wrong while creating the user");
+      res
+        .status(400)
+        .json({ message: "Something went wrong while getting the user" });
     }
   },
 );

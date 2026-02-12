@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zNumberFromStringNullable } from "../types";
 export const zLogin = z.object({
   emailId: z.email("Invalid email format").trim().toLowerCase(),
   password: z
@@ -22,4 +23,10 @@ export const zSignUp = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
+  age: z.number().min(1, "Please enter the age"),
+  gender: z.enum(["male", "female", "others"]),
+  about: z.string().optional(),
+  skills: z
+    .array(z.string())
+    .max(10, { message: "You can have a maximum of 10 skills" }),
 });

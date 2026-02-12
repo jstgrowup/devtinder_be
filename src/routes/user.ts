@@ -90,7 +90,7 @@ router.get(
           { _id: { $ne: loggedInUserId } },
         ],
       })
-        .select("firstName lastName photoUrl age gender about skills")
+        .select("firstName lastName photoUrl age gender about skills about")
         .skip(skip)
         .limit(limit);
       res.json({ data: users });
