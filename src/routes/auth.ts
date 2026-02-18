@@ -14,13 +14,23 @@ router.post("/signup", async (req: Request, res: Response) => {
     // New instance of the user model
     const user = new User({ ...validatedResult, password: hashedPassword });
     await user.save();
-    res.send("User created successfully");
+    const token = await user.getJwt();
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 8 * 3600000),
+    });
+    return res.json({
+      message: "User created successfully",
+      data: user,
+      success: true,
+    });
   } catch (error) {
     const validationError = fromError(error).toString();
     if (validationError) {
-      res.status(400).send(validationError);
+      res.status(400).json({ message: validationError });
     } else {
-      res.status(400).send("Something went wrong while creating the user");
+      res
+        .status(400)
+        .json({ message: "Something went wrong while creating the user" });
     }
   }
 });
