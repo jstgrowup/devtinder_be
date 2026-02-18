@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { AuthenticatedRequest } from "../types/index.js";
 
-import { zProfileEdit } from "../zod/profile.js";
+import { zEditProfile } from "../zod/profile.js";
 const router = Router();
 import { fromError } from "zod-validation-error";
 import { authMiddleware } from "../middlewares/auth.js";
@@ -11,7 +11,6 @@ router.get(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const user = req.user;
-      console.log("user:", user);
       res.send({ data: user });
     } catch (error) {
       res
@@ -27,7 +26,7 @@ router.patch(
     try {
       const body = req.body;
       const user = req.user;
-      const validatedResult = zProfileEdit.parse(body);
+      const validatedResult = zEditProfile.parse(body);
       Object.assign(user, validatedResult);
       await user.save();
       res.json({ message: "Profile updated successfully" });

@@ -8,7 +8,7 @@ import { ConnectionRequest } from "../models/ConnectionRequest";
 import { authMiddleware } from "../middlewares/auth";
 import { REQUEST_STATUS } from "../utils/enums";
 router.post(
-  "/send/interested/:status/:toUserId",
+  "/send/:status/:toUserId",
   authMiddleware,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -28,7 +28,9 @@ router.post(
         ],
       });
       if (foundConnectionRequest) {
-        return res.status(400).send("Sorry connection request already exists");
+        return res
+          .status(400)
+          .json({ message: "Sorry connection request already exists" });
       }
       const connectionRequest = new ConnectionRequest({
         fromUserId,
@@ -36,13 +38,17 @@ router.post(
         status: validatedBody.status,
       });
       await connectionRequest.save();
-      return res.send("Connection Request sent successfully");
+      return res.json({
+        message: `You have successfully ${validatedBody.status} ${toUser.firstName}`,
+      });
     } catch (error) {
       const validationError = fromError(error).toString();
       if (validationError) {
-        res.status(400).send(validationError.toString());
+        res.status(400).json({ message: validationError.toString() });
       } else {
-        res.status(400).send("Something went wrong while creating the user");
+        res
+          .status(400)
+          .json({ mesage: "Something went wrong while creating the user" });
       }
     }
   },
@@ -62,19 +68,21 @@ router.post(
         status: REQUEST_STATUS.INTERESTED,
       });
       if (!connectionRequest) {
-        return res.status(400).send("Sorry invalid request id");
+        return res.status(400).json({ message: "Sorry invalid request id" });
       }
       connectionRequest.status = validatedBody.status;
       await connectionRequest.save();
-      return res.send(
-        `Connection Request ${validatedBody.status} successfully`,
-      );
+      return res.json({
+        message: `Connection Request ${validatedBody.status} successfully`,
+      });
     } catch (error) {
       const validationError = fromError(error).toString();
       if (validationError) {
-        res.status(400).send(validationError.toString());
+        res.status(400).json({ message: validationError.toString() });
       } else {
-        res.status(400).send("Something went wrong while creating the user");
+        res
+          .status(400)
+          .json({ message: "Something went wrong while creating the user" });
       }
     }
   },

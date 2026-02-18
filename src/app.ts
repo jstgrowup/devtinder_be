@@ -7,12 +7,11 @@ import userRouter from "./routes/user";
 import cors from "cors";
 import { connectDB } from "./config/database.js";
 const app = express();
-// This has taken the json and converted it to JS object and added this into the req body
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
