@@ -2,7 +2,6 @@
   "name": "devtinder_be",
   "version": "1.0.0",
   "description": "tinder for developers",
-  "type": "module",
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
