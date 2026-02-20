@@ -23,8 +23,4 @@ jobs:
       - name: Pull image from docker hub
         run: docker pull jstgrwup/devtinder-backend:latest
       - name: Run Docker Container
-        run: docker run -d -p 8000:8000 \
-          --name devtinder-backend \
-          -e MONGO_URI='${{ secrets.MONGO_URI }}' \
-          -e FRONTEND_HOST='${{ secrets.FRONTEND_HOST }}' \
-          jstgrwup/devtinder-backend
+        run: docker run -d -p 8000:8000 --name devtinder-backend -e MONGO_URI='${{ secrets.MONGO_URI }}' -e FRONTEND_HOST='${{ secrets.FRONTEND_HOST }}' jstgrwup/devtinder-backend
