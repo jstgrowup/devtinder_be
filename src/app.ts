@@ -6,10 +6,12 @@ import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
 import cors from "cors";
 import { connectDB } from "./config/database.js";
+import dotenv from "dotenv";
 const app = express();
+dotenv.config();
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: `${process.env.FRONTEND_HOST}:3000`,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],

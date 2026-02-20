@@ -1,0 +1,30 @@
+name: Deploy Node Application
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: action/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: BUild the docker image
+        run: docker build -t jstgrwup/devtinder-backend .
+      - name: Publish Image to docker hub
+        run: docker push jstgrwup/devtinder-backend:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull jstgrwup/devtinder-backend:latest
+      - name: Run Docker Container
+        run: docker run -d -p 8000:8000 \
+          --name devtinder-backend \
+          -e MONGO_URI='${{ secrets.MONGO_URI }}' \
+          -e FRONTEND_HOST='${{ secrets.FRONTEND_HOST }}' \
+          jstgrwup/devtinder-backend
