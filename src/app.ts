@@ -5,7 +5,7 @@ import profileRouter from "./routes/profile";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
 import cors from "cors";
-import { connectDB } from "./config/database.js";
+import { connectDB } from "./config/database";
 import dotenv from "dotenv";
 const app = express();
 dotenv.config();
