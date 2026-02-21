@@ -25,6 +25,6 @@ jobs:
       - name: Pull image from docker hub
         run: docker pull jstgrwup/devtinder-backend:latest
       - name: Delete old container
-        run: docker rm -f jstgrwup/devtinder-backend || true
+        run: docker rm -f devtinder-server || true
       - name: Run Docker Container
         run: docker run -d -p 8000:8000 --name devtinder-server -e MONGO_URI='${{ secrets.MONGO_URI }}' -e FRONTEND_HOST='${{ secrets.FRONTEND_HOST }}' jstgrwup/devtinder-backend
