@@ -20,8 +20,12 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Clean od docker images
-        run: docker system prune -a -f
+      - name: Stop old container
+        run: docker stop devtinder-server || true
+      - name: Remove old container
+        run: docker rm devtinder-server || true
+      - name: Remove unused images and volumes
+        run: docker system prune -a -f --volumes
       - name: Pull image from docker hub
         run: docker pull jstgrwup/devtinder-backend:latest
       - name: Delete old container
