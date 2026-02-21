@@ -1,4 +1,4 @@
-name: Deploy Node Application
+name: Backend
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Login to docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-      - name: BUild the docker image
+      - name: Build the docker image
         run: docker build -t jstgrwup/devtinder-backend .
       - name: Publish Image to docker hub
         run: docker push jstgrwup/devtinder-backend:latest
