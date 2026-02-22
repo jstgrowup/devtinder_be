@@ -3,7 +3,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 ARG FRONTEND_HOST
+ARG JWT_SECRET
+
 ENV FRONTEND_HOST=$FRONTEND_HOST
+ENV JWT_SECRET=$JWT_SECRET
+
 COPY package.json package-lock.json ./
 RUN npm install
 
