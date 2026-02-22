@@ -2,7 +2,8 @@
 FROM node:20-alpine AS builder
 
 WORKDIR /app
-
+ARG FRONTEND_HOST
+ENV FRONTEND_HOST=$FRONTEND_HOST
 COPY package.json package-lock.json ./
 RUN npm install
 
