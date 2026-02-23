@@ -1,0 +1,20 @@
+{
+  "name": "Get users connections (Prod)",
+  "rank": "ax",
+  "request": {
+    "type": "http",
+    "url": "{{prod}}/user/requests/connections",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

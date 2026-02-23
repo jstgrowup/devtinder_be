@@ -1,14 +1,14 @@
 {
-  "name": "Untitled request",
-  "rank": "auntit17718532845121",
+  "name": "Send Connection request to user (Prod)",
+  "rank": "auu",
   "request": {
     "type": "http",
-    "url": "https://app.requestly.io/echo",
+    "url": "{{prod}}/request/send/interested/69889a836aadd11ac4663b3b",
     "scripts": {
       "preRequest": "",
       "postResponse": ""
     },
-    "method": "GET",
+    "method": "POST",
     "queryParams": [],
     "headers": [],
     "body": "",
@@ -16,6 +16,7 @@
     "auth": {
       "currentAuthType": "INHERIT",
       "authConfigStore": {}
-    }
+    },
+    "pathVariables": []
   }
 }

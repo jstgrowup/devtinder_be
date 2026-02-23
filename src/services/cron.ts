@@ -37,21 +37,21 @@ cron.schedule("* * * * * ", async () => {
       "deysubham999@gmail.com",
       "deysubham999@gmail.com",
     ];
-    await emailQueue.addBulk(
-      emails.map((email) => ({
-        name: "sendEmailReminder",
-        data: { toAddress: email },
-        opts: {
-          attempts: 3,
-          backoff: {
-            type: "exponential",
-            delay: 5000,
-          },
-          removeOnComplete: true,
-          removeOnFail: false,
-        },
-      })),
-    );
+    // await emailQueue.addBulk(
+    //   emails.map((email) => ({
+    //     name: "sendEmailReminder",
+    //     data: { toAddress: email },
+    //     opts: {
+    //       attempts: 3,
+    //       backoff: {
+    //         type: "exponential",
+    //         delay: 5000,
+    //       },
+    //       removeOnComplete: true,
+    //       removeOnFail: false,
+    //     },
+    //   })),
+    // );
   } catch (error) {}
   console.log("runing the cron");
 });

@@ -1,0 +1,22 @@
+{
+  "name": "Send Connection request to user",
+  "rank": "auntit17718532845121",
+  "request": {
+    "type": "http",
+    "url": "{{dev}}/request/send/interested/69889a836aadd11ac4663b3b",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [],
+    "body": "",
+    "contentType": "text/plain",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    },
+    "pathVariables": []
+  }
+}

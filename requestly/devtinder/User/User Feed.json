@@ -1,0 +1,20 @@
+{
+  "name": "User Feed",
+  "rank": "axV",
+  "request": {
+    "type": "http",
+    "url": "{{dev}}/user/feed",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}
