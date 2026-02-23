@@ -26,7 +26,7 @@ app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 app.use("/request", requestRouter);
 app.use("/user", userRouter);
-
+import("./services/cron");
 connectDB()
   .then(() => {
     app.listen(8000, () => {

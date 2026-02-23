@@ -1,5 +1,7 @@
 import { Request } from "express";
+import mongoose from "mongoose";
 import z from "zod";
+import { REQUEST_STATUS } from "../utils/enums";
 export interface AuthenticatedRequest extends Request {
   user: any;
 }
@@ -19,3 +21,8 @@ export const zNumberFromStringNullable = z
   .nullable()
   .default(null)
   .transform((val) => (val != null ? Number(val) : null));
+export interface IConnectionRequest {
+  fromUserId: mongoose.Types.ObjectId;
+  toUserId: mongoose.Types.ObjectId;
+  status: REQUEST_STATUS;
+}

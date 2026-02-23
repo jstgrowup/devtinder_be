@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { REQUEST_STATUS } from "../utils/enums";
-const connectionRequestSchema = new mongoose.Schema(
+import { IConnectionRequest } from "../types";
+const connectionRequestSchema = new mongoose.Schema<IConnectionRequest>(
   {
     fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
