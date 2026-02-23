@@ -1,0 +1,21 @@
+{
+  "name": "Signup (Prod)",
+  "rank": "av",
+  "request": {
+    "type": "http",
+    "url": "{{prod}}/auth/signup",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [],
+    "body": "{\n   \"emailId\":\"subhamzoom@gmail.com\",\n  \"password\":\"asd232@#A\",\n  \"lastName\":\"bhat\",\n  \"firstName\":\"zoom\",\n  \"age\":23,\n  \"gender\":\"male\",\n  \"about\":\"Living life\",\n  \"skills\":[\"cooking\",\"cleanings\",\"coding\",\"running\"]\n}",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

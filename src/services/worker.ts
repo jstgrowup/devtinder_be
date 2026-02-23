@@ -4,7 +4,7 @@ import { sendEmail } from "./email";
 const worker = new Worker(
   "emailQueue",
   async (job) => {
-    await sendEmail({
+    sendEmail({
       fromAddress: "subham@byldd.com",
       toAddress: job.data.toAddress,
       subject: "Pending Connection Reminder",

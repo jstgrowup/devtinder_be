@@ -1,0 +1,21 @@
+{
+  "name": "Edit Profile",
+  "rank": "auntit17718533226401",
+  "request": {
+    "type": "http",
+    "url": "{{dev}}/profile/edit",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "PATCH",
+    "queryParams": [],
+    "headers": [],
+    "body": "{\n   \n  \"firstName\":\"subasdsadas\"\n}",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

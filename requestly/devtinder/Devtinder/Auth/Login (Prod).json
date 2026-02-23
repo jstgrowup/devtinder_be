@@ -1,0 +1,21 @@
+{
+  "name": "Login (Prod)",
+  "rank": "ax",
+  "request": {
+    "type": "http",
+    "url": "{{prod}}/auth/login",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [],
+    "body": "{\n   \"emailId\": \"subhambyldd@gmail.com\",\n  \"password\": \"asd232@#A\"\n}",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

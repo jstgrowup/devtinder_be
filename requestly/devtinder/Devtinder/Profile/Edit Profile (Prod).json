@@ -1,0 +1,21 @@
+{
+  "name": "Edit Profile (Prod)",
+  "rank": "auu",
+  "request": {
+    "type": "http",
+    "url": "{{prod}}/profile/edit",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "PATCH",
+    "queryParams": [],
+    "headers": [],
+    "body": "{\n   \n  \"firstName\":\"subasdsadas\"\n}",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

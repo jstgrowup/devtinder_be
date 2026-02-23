@@ -1,0 +1,21 @@
+{
+  "name": "Login",
+  "rank": "aw",
+  "request": {
+    "type": "http",
+    "url": "{{dev}}/auth/login",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [],
+    "body": "{\n   \"emailId\": \"subhambyldd@gmail.com\",\n  \"password\": \"asd232@#A\"\n}",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}

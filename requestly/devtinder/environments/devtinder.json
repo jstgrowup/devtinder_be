@@ -1,0 +1,17 @@
+{
+  "name": "devtinder",
+  "variables": {
+    "dev": {
+      "value": "http://localhost:8000",
+      "type": "string",
+      "id": "f6921a9c-b72a-45ac-91f4-d2ea646659b3",
+      "isSecret": false
+    },
+    "prod": {
+      "value": "",
+      "type": "string",
+      "id": "67f9e9e9-049c-47ab-9a3f-f16f22b80f30",
+      "isSecret": false
+    }
+  }
+}
