@@ -12,7 +12,7 @@ export type IConnectionRequestPopulated = Omit<
   fromUserId: IUser;
   toUserId: IUser;
 };
-cron.schedule("* * * * * ", async () => {
+cron.schedule("5 4 * * *", async () => {
   try {
     const yesterday = subDays(new Date(), 1);
     const yesterdayStart = startOfDay(yesterday);
