@@ -8,6 +8,7 @@ export const zLogin = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
 });
+export type ILoginPayload = z.infer<typeof zLogin>;
 export const zSignUp = z.object({
   firstName: z
     .string({ error: "First name is required" })
@@ -23,3 +24,4 @@ export const zSignUp = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
 });
+export type ISignupPayload = z.infer<typeof zSignUp>;

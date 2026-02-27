@@ -1,9 +1,5 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import authRouter from "./routes/auth";
-import profileRouter from "./routes/profile";
-import requestRouter from "./routes/request";
-import userRouter from "./routes/user";
 import cors from "cors";
 import { connectDB } from "./config/database";
 import dotenv from "dotenv";
@@ -22,10 +18,40 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Hello World, from express");
 });
-app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/request", requestRouter);
-app.use("/user", userRouter);
+
+app.post("/api", async (req, res) => {
+  const { namespace, apiName, data } = req.body;
+
+  try {
+    // 1. Find the module
+    const path = `./api/${namespace}/${apiName}`;
+    const { inputSchema } = await import(`${path}/constants.ts`);
+    const { default: run } = await import(`${path}/run.ts`);
+
+    // 2. Validate data
+    const validatedData = inputSchema.parse(data);
+
+    // 3. Run Logic
+    const result = await run(validatedData);
+
+    // 4. Set Cookie (Specific to Signup/Login)
+    if (result.token) {
+      res.cookie("token", result.token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
+    }
+
+    // 5. Success Response
+    return res.status(200).json({ status: "ok", data: result });
+  } catch (error: any) {
+    // Zod errors or Thrown errors land here
+    return res.status(200).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+});
 import("./services/cron");
 connectDB()
   .then(() => {
