@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { User } from "../../../models/User";
-import { ISignupPayload } from "../../../zod/auth";
+import { ISignupPayload } from "./constants";
 
 export default async function run({
   emailId,
@@ -24,5 +24,5 @@ export default async function run({
   await user.save();
   const token = await user.getJwt();
 
-  return { user, token };
+  return { message: "Signup successfully", token, data: user };
 }

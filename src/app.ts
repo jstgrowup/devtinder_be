@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./config/database";
 import dotenv from "dotenv";
+import { getAuthenticatedUser } from "./services/auth";
 const app = express();
 dotenv.config();
 app.use(
@@ -25,14 +26,19 @@ app.post("/api", async (req, res) => {
   try {
     // 1. Find the module
     const path = `./api/${namespace}/${apiName}`;
-    const { inputSchema } = await import(`${path}/constants.ts`);
+    const { inputSchema, requiresAuth } = await import(`${path}/constants.ts`);
     const { default: run } = await import(`${path}/run.ts`);
 
     // 2. Validate data
     const validatedData = inputSchema.parse(data);
+    let context = { user: null };
+
+    if (requiresAuth) {
+      context.user = await getAuthenticatedUser(req.cookies);
+    }
 
     // 3. Run Logic
-    const result = await run(validatedData);
+    const result = await run(validatedData, context);
 
     // 4. Set Cookie (Specific to Signup/Login)
     if (result.token) {

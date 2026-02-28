@@ -1,5 +1,6 @@
 import z from "zod";
-export const zEditProfile = z
+
+export const inputSchema = z
   .object({
     firstName: z
       .string({ error: "First name is required" })
@@ -23,3 +24,6 @@ export const zEditProfile = z
       .max(10, { message: "You can have a maximum of 10 skills" }),
   })
   .partial();
+export type IEditProfile = z.infer<typeof inputSchema>;
+
+export const requiresAuth = true;

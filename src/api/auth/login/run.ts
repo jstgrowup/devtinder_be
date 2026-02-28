@@ -1,5 +1,5 @@
 import { User } from "../../../models/User";
-import { ILoginPayload } from "../../../zod/auth";
+import { ILoginPayload } from "./constants";
 
 export default async function run(data: ILoginPayload) {
   // Check if user exists
@@ -12,7 +12,7 @@ export default async function run(data: ILoginPayload) {
   if (validatedPassword) {
     // Create a token
     const token = await foundUser.getJwt();
-    return { user: foundUser, token };
+    return { message: "Signin successfully", data: foundUser, token };
   }
   throw new Error("Wrong password");
 }
