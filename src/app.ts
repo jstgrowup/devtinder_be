@@ -10,15 +10,12 @@ app.use(
   cors({
     origin: `${process.env.FRONTEND_HOST}:3000`,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    methods: "POST",
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json());
 app.use(cookieParser());
-app.get("/", (req, res) => {
-  res.send("Hello World, from express");
-});
 
 app.post("/api", async (req, res) => {
   const { namespace, apiName, data } = req.body;
@@ -47,16 +44,35 @@ app.post("/api", async (req, res) => {
         expires: new Date(Date.now() + 8 * 3600000),
       });
     }
-
+    if (result.clearCookie) {
+      res.cookie("token", null, {
+        httpOnly: true,
+        expires: new Date(0),
+      });
+    }
     // 5. Success Response
     return res.status(200).json({ status: "ok", data: result });
   } catch (error: any) {
-    // Zod errors or Thrown errors land here
-    return res.status(200).json({
+    // Check if it's a Zod Validation Error
+    if (error.name === "ZodError") {
+      return res.json({
+        status: "error",
+        data: {
+          message: error.errors[0].message,
+        },
+      });
+    }
+
+    return res.json({
       status: "error",
-      message: error.message || "Something went wrong",
+      data: {
+        message: error.message || "An unexpected error occurred",
+      },
     });
   }
+});
+app.get("/health", (req, res) => {
+  res.send("Hello World, from express");
 });
 import("./services/cron");
 connectDB()
