@@ -7,7 +7,8 @@
     "build": "tsc",
     "dev": "nodemon --exec tsx src/app.ts",
     "worker": "ts-node src/services/worker.ts",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "gen": "ts-node src/utils/generate-api.ts"
   },
   "author": "",
   "license": "ISC",
