@@ -5,6 +5,7 @@ import { connectDB } from "./config/database";
 import dotenv from "dotenv";
 import { getAuthenticatedUser } from "./services/auth";
 import { fromZodError } from "zod-validation-error";
+import { handleStripeWebhook } from "./services/webhook";
 const app = express();
 dotenv.config();
 app.use(
@@ -15,9 +16,13 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+app.post(
+  "/webhook/razorpay",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook,
+);
 app.use(express.json());
 app.use(cookieParser());
-
 app.post("/api", async (req, res) => {
   const { namespace, apiName, data } = req.body;
 
