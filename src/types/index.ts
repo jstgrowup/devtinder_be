@@ -1,7 +1,7 @@
 import { Request } from "express";
 import mongoose, { HydratedDocument } from "mongoose";
 import z from "zod";
-import { REQUEST_STATUS } from "../utils/enums";
+import { REQUEST_STATUS, SUBSCRIPTION_PLANS } from "../utils/enums";
 export interface AuthenticatedRequest extends Request {
   user: any;
 }
@@ -37,3 +37,11 @@ export type IContext = {
 export const zObjectId = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid ObjectId format." });
+
+export interface IPayment {
+  userId: mongoose.Types.ObjectId;
+  orderId: string;
+  amount: number;
+  recipt?: string;
+  plan: SUBSCRIPTION_PLANS;
+}

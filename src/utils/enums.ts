@@ -4,3 +4,7 @@ export enum REQUEST_STATUS {
   ACCEPTED = "accepted",
   REJECTED = "rejected",
 }
+export enum SUBSCRIPTION_PLANS {
+  BASE = "base",
+  SUPER_BOOST = "super-boost",
+}
