@@ -5,10 +5,10 @@ export const getAuthenticatedUser = async (cookies: { token: string }) => {
   const { token } = cookies;
 
   if (!token) {
-    throw new Error("Invalid token");
+    throw new Error("Invalid user token");
   }
 
-  const decoded = jwt.verify(token, "DEV@TINDER") as { _id: string };
+  const decoded = jwt.verify(token, process.env.JWT_SECRET) as { _id: string };
   const user = await User.findById(decoded._id);
 
   if (!user) {

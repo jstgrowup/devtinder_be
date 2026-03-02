@@ -16,11 +16,13 @@ const constantsContent = `import { z } from "zod";
 export const inputSchema = z.object({
   // Define your zod schema here
 });
-
+export type IBodyType = z.infer<typeof inputSchema>;
 export const requiresAuth = true;
 `;
 
-const runContent = `export default async function run(data: any, context: any) {
+const runContent = `import { IMongoContext } from "../../../types"
+  import { IBodyType } from "./constants";
+  export default async function run(data: IBodyType, context: IMongoContext) {
   // Logic goes here
   
   return {

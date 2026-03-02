@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/database";
 import dotenv from "dotenv";
 import { getAuthenticatedUser } from "./services/auth";
+import { fromZodError } from "zod-validation-error";
 const app = express();
 dotenv.config();
 app.use(
@@ -55,10 +56,15 @@ app.post("/api", async (req, res) => {
   } catch (error: any) {
     // Check if it's a Zod Validation Error
     if (error.name === "ZodError") {
+      const validationError = fromZodError(error, {
+        maxIssuesInMessage: 1,
+        prefix: null,
+        includePath: true,
+      });
       return res.json({
         status: "error",
         data: {
-          message: error.errors[0].message,
+          message: validationError.message,
         },
       });
     }

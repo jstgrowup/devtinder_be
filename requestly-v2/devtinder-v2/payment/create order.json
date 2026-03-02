@@ -1,6 +1,6 @@
 {
-  "name": "Login",
-  "rank": "aw",
+  "name": "create order",
+  "rank": "auntit17724265886081",
   "request": {
     "type": "http",
     "url": "{{dev}}/api",
@@ -11,7 +11,7 @@
     "method": "POST",
     "queryParams": [],
     "headers": [],
-    "body": "{\n  \"namespace\": \"auth\",\n  \"apiName\": \"login\",\n  \"data\": {\n    \"emailId\": \"subhamuber@gmail.com\",\n    \"password\": \"asd232@#A\"\n  }\n}\n",
+    "body": "{\n  \"namespace\": \"payment\",\n  \"apiName\": \"create\",\n  \"data\": { \"amount\": 5000000,\"plan\":\"base\"}\n}\n",
     "contentType": "application/json",
     "auth": {
       "currentAuthType": "INHERIT",
