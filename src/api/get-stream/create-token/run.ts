@@ -6,10 +6,7 @@ const serverClient = StreamChat.getInstance(
   process.env.STREAM_API_KEY,
   process.env.STREAM_API_SECRET,
 );
-export default async function run(
-  data: ICreateTokenBodyType,
-  context: IMongoContext,
-) {
+export default async function run(data: ICreateTokenBodyType) {
   const userID = data.toUserId;
   const token = serverClient.createToken(userID.toString());
 
