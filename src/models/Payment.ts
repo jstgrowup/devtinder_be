@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IPayment } from "../types";
-import { SUBSCRIPTION_PLANS } from "../utils/enums";
+import { RAZORPAY_PAYMENT_STATUS, SUBSCRIPTION_PLANS } from "../utils/enums";
 
 const paymentSchema = new mongoose.Schema<IPayment>(
   {
@@ -12,6 +12,14 @@ const paymentSchema = new mongoose.Schema<IPayment>(
     orderId: { type: String, required: true },
     amount: { type: Number, required: true, min: 100 },
     recipt: { type: String },
+    status: {
+      type: String,
+      enum: {
+        values: Object.values(RAZORPAY_PAYMENT_STATUS),
+        message: "{VALUE} is not a valid status",
+      },
+      default: RAZORPAY_PAYMENT_STATUS.AUTHORIZED,
+    },
     plan: {
       type: String,
       enum: {

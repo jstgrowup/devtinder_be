@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png",
     },
     skills: { type: [String], validate: (v: string) => v.length <= 10 },
+    isPremiumUser: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

@@ -1,7 +1,12 @@
 import { Request } from "express";
 import mongoose, { HydratedDocument } from "mongoose";
 import z from "zod";
-import { REQUEST_STATUS, SUBSCRIPTION_PLANS } from "../utils/enums";
+import {
+  RAZORPAY_PAYMENT_STATUS,
+  REQUEST_STATUS,
+  SUBSCRIPTION_PLANS,
+  SUBSCRIPTION_STATUS,
+} from "../utils/enums";
 export interface AuthenticatedRequest extends Request {
   user: any;
 }
@@ -16,6 +21,7 @@ export interface IUser {
   about: string;
   photoUrl: string;
   skills: string[];
+  isPremiumUser: boolean;
 }
 
 export const zNumberFromStringNullable = z
@@ -43,5 +49,18 @@ export interface IPayment {
   orderId: string;
   amount: number;
   recipt?: string;
+  status: RAZORPAY_PAYMENT_STATUS;
   plan: SUBSCRIPTION_PLANS;
+}
+export interface ISubscription {
+  userId: mongoose.Types.ObjectId;
+  amount: number;
+  plan: SUBSCRIPTION_PLANS;
+  currentPeriodStarts: Date;
+  currentPeriodEnds: Date;
+  status: SUBSCRIPTION_STATUS;
+}
+export interface ICall {
+  fromUserId: mongoose.Types.ObjectId;
+  toUserId: mongoose.Types.ObjectId;
 }

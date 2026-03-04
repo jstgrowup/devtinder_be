@@ -28,7 +28,15 @@ export default async function run({}, context: IContext) {
       "about",
       "skills",
     ]);
+
+  const data = connectionRequests.map((row) => {
+    if (row.fromUserId._id.toString() === userId.toString()) {
+      return row.toUserId;
+    }
+    return row.fromUserId;
+  });
+
   return {
-    data: connectionRequests,
+    data,
   };
 }

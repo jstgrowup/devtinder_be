@@ -5,7 +5,7 @@ import { connectDB } from "./config/database";
 import dotenv from "dotenv";
 import { getAuthenticatedUser } from "./services/auth";
 import { fromZodError } from "zod-validation-error";
-import { handleStripeWebhook } from "./services/webhook";
+import { handleRzpWebhook } from "./services/webhook";
 const app = express();
 dotenv.config();
 app.use(
@@ -19,7 +19,7 @@ app.use(
 app.post(
   "/webhook/razorpay",
   express.raw({ type: "application/json" }),
-  handleStripeWebhook,
+  handleRzpWebhook,
 );
 app.use(express.json());
 app.use(cookieParser());
