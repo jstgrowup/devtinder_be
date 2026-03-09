@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { ICall, ISubscription } from "../types";
 
-const callSchema = new mongoose.Schema<ICall>(
+const roomSchema = new mongoose.Schema<ICall>(
   {
     fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,4 +17,4 @@ const callSchema = new mongoose.Schema<ICall>(
   { timestamps: true },
 );
 
-export const Call = mongoose.model("Call", callSchema);
+export const Room = mongoose.model("Room", roomSchema);

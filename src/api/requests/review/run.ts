@@ -18,8 +18,8 @@ export default async function run(
   if (!connectionRequest) {
     throw new Error("Sorry invalid request id");
   }
-  await connectionRequest.save();
   connectionRequest.status = status;
+  await connectionRequest.save();
   return {
     message: `Connection Request ${status} successfully`,
   };
