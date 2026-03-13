@@ -30,5 +30,5 @@ const paymentSchema = new mongoose.Schema<IPayment>(
   },
   { timestamps: true },
 );
-
+paymentSchema.index({ orderId: 1 });
 export const Payment = mongoose.model("Payment", paymentSchema);

@@ -7,15 +7,17 @@ export default async function run({}, context: IContext) {
   const connectionRequests = await ConnectionRequest.find({
     toUserId: userId,
     status: REQUEST_STATUS.INTERESTED,
-  }).populate("fromUserId", [
-    "firstName",
-    "lastName",
-    "photoUrl",
-    "age",
-    "gender",
-    "about",
-    "skills",
-  ]);
+  })
+    .populate("fromUserId", [
+      "firstName",
+      "lastName",
+      "photoUrl",
+      "age",
+      "gender",
+      "about",
+      "skills",
+    ])
+    .lean();
   return {
     data: connectionRequests,
   };

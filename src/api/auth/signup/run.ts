@@ -22,7 +22,6 @@ export default async function run({
   });
 
   await user.save();
-  const token = await user.getJwt();
 
-  return { message: "Signup successfully", token, data: user };
+  return { message: "Signup successfully", data: user };
 }

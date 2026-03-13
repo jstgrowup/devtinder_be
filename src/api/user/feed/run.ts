@@ -13,7 +13,9 @@ export default async function run(
   // Find all the requests that i have sent or recieved
   const connectionRequests = await ConnectionRequest.find({
     $or: [{ toUserId: loggedInUserId }, { fromUserId: loggedInUserId }],
-  }).select("fromUserId toUserId");
+  })
+    .select("fromUserId toUserId")
+    .lean();
   const hideUsersFromFeed = new Set<string>();
   connectionRequests.forEach((req) => {
     hideUsersFromFeed.add(req.fromUserId.toString());
@@ -27,7 +29,8 @@ export default async function run(
   })
     .select("firstName lastName photoUrl age gender about skills about")
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .lean();
   return {
     data: users,
   };

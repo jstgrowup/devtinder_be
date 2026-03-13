@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
   { timestamps: true },
 );
 
-userSchema.index({ firstName: 1, lastName: 1 });
+userSchema.index({ firstName: 1, lastName: 1, emailId: 1 });
 userSchema.methods.getJwt = async function () {
   const user = this;
   return await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
