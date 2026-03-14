@@ -10,7 +10,7 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_HOST}:3000`,
+    origin: process.env.FRONTEND_HOST,
     credentials: true,
     methods: "POST",
     allowedHeaders: ["Content-Type", "Authorization"],
