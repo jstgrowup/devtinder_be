@@ -47,6 +47,8 @@ app.post("/api", async (req, res) => {
     if (result.token) {
       res.cookie("token", result.token, {
         httpOnly: true,
+        secure: true,
+        sameSite: "none",
         expires: new Date(Date.now() + 8 * 3600000),
       });
       delete result.token;
