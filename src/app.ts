@@ -29,8 +29,8 @@ app.post("/api", async (req, res) => {
   try {
     // 1. Find the module
     const path = `./api/${namespace}/${apiName}`;
-    const { inputSchema, requiresAuth } = await import(`${path}/constants.ts`);
-    const { default: run } = await import(`${path}/run.ts`);
+    const { inputSchema, requiresAuth } = await import(`${path}/constants`);
+    const { default: run } = await import(`${path}/run`);
 
     // 2. Validate data
     const validatedData = inputSchema.parse(data);
