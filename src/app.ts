@@ -43,23 +43,7 @@ app.post("/api", async (req, res) => {
     // 3. Run Logic
     const result = await run(validatedData, context);
 
-    // 4. Set Cookie (Specific to Signup/Login)
-    if (result.token) {
-      res.cookie("token", result.token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        expires: new Date(Date.now() + 8 * 3600000),
-      });
-      delete result.token;
-    }
-    if (result.clearCookie) {
-      res.cookie("token", null, {
-        httpOnly: true,
-        expires: new Date(0),
-      });
-    }
-    // 5. Success Response
+    // 4. Success Response
     return res.status(200).json({ status: "ok", data: result });
   } catch (error: any) {
     // Check if it's a Zod Validation Error
