@@ -3,7 +3,7 @@
   "rank": "ax",
   "request": {
     "type": "http",
-    "url": "{{prod}}/auth/login",
+    "url": "{{prod}}/api",
     "scripts": {
       "preRequest": "",
       "postResponse": ""
@@ -11,7 +11,7 @@
     "method": "POST",
     "queryParams": [],
     "headers": [],
-    "body": "{\n   \"emailId\": \"subhambyldd@gmail.com\",\n  \"password\": \"asd232@#A\"\n}",
+    "body": "{\n  \"namespace\": \"auth\",\n  \"apiName\": \"login\",\n  \"data\": {\n    \"emailId\": \"subhamuber@gmail.com\",\n    \"password\": \"asd232@#A\"\n  }\n}",
     "contentType": "application/json",
     "auth": {
       "currentAuthType": "INHERIT",

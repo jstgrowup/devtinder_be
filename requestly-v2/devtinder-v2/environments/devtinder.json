@@ -8,7 +8,7 @@
       "isSecret": false
     },
     "prod": {
-      "value": "",
+      "value": "https://devtinder-be-5hvd.onrender.com",
       "type": "string",
       "id": "67f9e9e9-049c-47ab-9a3f-f16f22b80f30",
       "isSecret": false

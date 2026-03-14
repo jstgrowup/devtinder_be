@@ -1,0 +1,20 @@
+{
+  "name": "Prod Health",
+  "request": {
+    "type": "http",
+    "url": "{{prod}}/health",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "body": "",
+    "contentType": "text/plain",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    }
+  }
+}
