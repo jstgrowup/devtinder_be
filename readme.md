@@ -1,60 +1,184 @@
-- **The Unified Dispatcher Architecture**: Documenting the strategy of using a single `POST` endpoint for all API interactions to ensure consistency and centralized security.
-- **Performance Optimizations**: Highlighting the use of Mongoose `.lean()` queries and indexing to optimize database efficiency.
-- **Testing Frameworks**: Outlining the integration of Vitest and Supertest for route and logic verification.
-- **Webhook Implementation**: Detailing the specialized handling of Razorpay webhooks, signature verification, and idempotency logic.
+# 🧩 API Architecture Overview
 
-This file is structured to be used as a `README.md` or as part of a dedicated `docs` folder in your GitHub repository.
+## 📁 File-Based Routing (The Dispatcher)
 
-````python?code_reference&code_event_index=3
-markdown_content = """# Backend Architecture Documentation: Unified Dispatcher Pattern
+In this setup, you don’t write routes like `app.post('/api/login')`. Instead, you have a **Dispatcher**.
 
-## 🚀 Overview
-This project, developed by **Sayani Bhattacharjee**, implements a specialized **Unified Dispatcher Architecture**. To ensure maximum consistency, security, and developer efficiency, the application strictly utilizes **POST requests** for all primary API interactions via a centralized `/api` entry point.
+The dispatcher is a single Express route (`/api`) that looks at the `namespace` and `apiName` in the request body. It then dynamically imports the file at:
 
-## 🏗️ Core Architecture: The Dispatcher
-The application moves away from traditional REST routing in favor of a "Feature-First" dispatcher model.
+```
+src/api/<namespace>/<apiName>/run.ts
+```
 
-### Request Flow
-1. **Entry Point**: All frontend requests are sent to `/api`.
-2. **Standardized Payload**:
-   ```json
-   {
-     "namespace": "auth",
-     "apiName": "login",
-     "data": { ... }
-   }
-````
+### ✅ Why it’s good
 
-3. **Routing Logic**: The dispatcher dynamically locates the corresponding logic in `src/api/<namespace>/<apiName>/run.ts`.
-4. **Validation**: Every request is validated against a **Zod** schema before execution.
-
-## ⚡ Performance Optimization
-
-Performance is a top priority, particularly regarding database query efficiency and response times.
-
-- **Lean Queries**: All read operations utilize Mongoose `.lean()` to return plain JavaScript objects, bypassing the overhead of Mongoose document hydration.
-- **Indexing**: High-traffic fields, including `order_id`, `userId`, and connection statuses, are indexed to ensure sub-millisecond lookups.
-- **Projection**: Queries are restricted to return only necessary fields, reducing network payload size.
-
-## 💳 Webhook Handling (Razorpay)
-
-Webhooks are treated as a structural exception to the dispatcher rule to accommodate third-party requirements.
-
-- **Dedicated Route**: Webhooks are handled at `/webhook/razorpay`.
-- **Signature Verification**: Implemented using `razorpay/dist/utils/razorpay-utils` to verify the authenticity of every event.
-- **Idempotency**: The system checks the current status of payment records (e.g., `captured`) before processing to prevent duplicate subscriptions.
-- **Execution Flow**: The server acknowledges receipt with a `200 OK` immediately after verification to prevent timeout retries from the provider.
-
-## 🧪 Testing Strategy
-
-The project maintains high reliability through a comprehensive testing suite using **Vitest** and **Supertest**.
-
-- **Vitest**: Utilized for its fast, ESM-native execution.
-- **Supertest**: Used to perform integration tests on the dispatcher and individual logic modules without requiring a live server port.
-- **Structure**: Tests are co-located with their respective API modules (e.g., `run.test.ts`) to ensure maintainability.
-
-## 🛠️ Error Handling
-
-We utilize `zod-validation-error` with a "First-Error-Only" configuration. This ensures that the frontend receives clear, human-readable error messages (e.g., _"Amount must be at least 1"_) rather than complex technical objects.
+- **Discovery**: If you want to find the "Swipe Right" logic, just look for the folder `swipe/right`.
+- **Scalability**: You can have hundreds of endpoints, and your `app.ts` file stays the same size.
 
 ---
+
+## 🛡️ Zod Validations (The Firewall)
+
+Every API folder contains a `schema.ts` file. This file defines exactly what the incoming data should look like.
+
+Before the logic in `run.ts` even starts, the dispatcher validates the input using this Zod schema.
+
+If the user sends invalid data (e.g., a string instead of a number), Zod catches it immediately.
+
+### 💡 The Benefit
+
+Your business logic in `run.ts` can **trust the data**.
+
+No need to write repetitive checks like:
+
+```ts
+if (!req.body.amount) {
+  throw new Error("Amount is required");
+}
+```
+
+---
+
+## ⚙️ `run.ts` (The Brain)
+
+This is where the actual work happens. Each API endpoint exports a single function.
+
+### Example
+
+```ts
+// src/api/profile/update/run.ts
+
+export const run = async ({ data, context }) => {
+  const { userId } = context;
+
+  const updatedUser = await User.findByIdAndUpdate(userId, data, { new: true });
+
+  return {
+    message: "Profile updated successfully",
+    data: updatedUser,
+  };
+};
+```
+
+### ✅ Why this is powerful
+
+- Fully **unit-testable**
+- No need to mock Express `req`/`res`
+- Clean separation of concerns
+
+---
+
+## 📦 `constants.ts` (The Source of Truth)
+
+To avoid **magic strings** and typos, store all reusable values here.
+
+### Includes
+
+- **Enums**
+
+  ```ts
+  REQUEST_STATUS.ACCEPTED;
+  SUBSCRIPTION_STATUS.ACTIVE;
+  ```
+
+- **Configuration**
+  - Monthly pricing
+  - Pagination limits
+
+### 💡 Benefit
+
+Change a value in one place, and it updates across the entire app.
+
+---
+
+## 🔁 The "Always 200" Response Strategy
+
+This is the most controversial—but powerful—part of the architecture.
+
+Regardless of success or failure, the HTTP status code is always:
+
+```
+200 OK
+```
+
+Instead of relying on HTTP status codes (`400`, `401`, `500`), success and failure are handled inside the response body.
+
+### 📦 Response Structure
+
+#### ✅ Success
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "message": "Done",
+    "payload": []
+  }
+}
+```
+
+#### ❌ Error
+
+```json
+{
+  "status": "error",
+  "data": {
+    "message": "Amount is too small"
+  }
+}
+```
+
+---
+
+## 🤔 Why this approach?
+
+### 1. Frontend Consistency
+
+Your API client only needs a single `try/catch` block.
+
+It simply checks:
+
+```ts
+response.data.status;
+```
+
+---
+
+### 2. Dispatcher Simplicity
+
+The dispatcher doesn’t need to decide which HTTP status code to send.
+
+It just:
+
+- Catches errors
+- Formats them (e.g., using `fromZodError`)
+- Wraps everything in a `200 OK` response
+
+---
+
+### 3. Clear Error Separation
+
+- **Network Errors** → e.g., `502 Bad Gateway`
+  - Indicates server/infrastructure failure
+
+- **Logic Errors** → `status: "error"`
+  - Indicates validation or business logic failure
+
+### 💡 Interpretation
+
+- `500` → Server crashed
+- `200 + status: "error"` → Request handled, but invalid input or logic failure
+
+---
+
+## 🚀 Summary
+
+This architecture gives you:
+
+- 🔍 Easy discovery
+- 📈 Infinite scalability
+- 🛡️ Strong validation
+- 🧠 Clean business logic
+- 🔁 Predictable API responses
+
+Perfect for building large, maintainable backend systems.
