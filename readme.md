@@ -58,22 +58,3 @@ The project maintains high reliability through a comprehensive testing suite usi
 We utilize `zod-validation-error` with a "First-Error-Only" configuration. This ensures that the frontend receives clear, human-readable error messages (e.g., _"Amount must be at least 1"_) rather than complex technical objects.
 
 ---
-
-_Documentation generated for the DevTinder project._
-"""
-
-with open("backend-architecture-docs.md", "w") as f:
-f.write(markdown_content)
-
-```
-Your Markdown file is ready.
-
-[file-tag: code-generated-file-0-1776178665649653568]
-
-This documentation covers:
-* **The Unified Dispatcher Pattern**: Explaining the `/api` entry point and why your specific architecture uses it.
-* **Performance Strategies**: Detailing your use of `.lean()` queries and indexing for database efficiency.
-* **Testing Infrastructure**: Documenting your setup with **Vitest** and **Supertest**.
-* **Webhook Implementation**: Outlining the secure handling of Razorpay events and signature verification.
-* **Error Handling**: Describing how you use Zod to provide clear, single-issue error messages to the frontend.
-```
