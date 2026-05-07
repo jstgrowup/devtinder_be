@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ICall, ISubscription } from "../types";
+import { ICall } from "../types";
 
 const roomSchema = new mongoose.Schema<ICall>(
   {
